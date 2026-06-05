@@ -2642,10 +2642,10 @@
   if(dlIframe) dlIframe.src = "";
   
   updateDownloadLabel();
-
+  
   // --- RELOAD PLAYER BASED ON ACTIVE MODE ---
   const playbackMode = localStorage.getItem('playbackMode') || 'without_ads';
-
+  
   if (playbackMode === 'without_ads') {
       // NAYA LOGIC: Episode change hone par hamesha Server 1 (Premium 1) se start hoga
       renderPremiumServers();
@@ -2657,7 +2657,7 @@
           buildServerButtons(true);
       }
   }
-};
+  };
   
   async function loadHome(append = false) {
   const container = document.getElementById('home-view');
@@ -4922,24 +4922,24 @@
     }
   }
   
-// Aapka apna deployed CinePro Backend
-const CINEPRO_BASE = 'https://cinepro-s59x.onrender.com';
-
-// Luza ke variables jo delete ho gaye the, unhe wapas add kar diya
-const LUZA_BASE = 'https://luza-api.antig9469.workers.dev';
-const PREMIUM_SOURCES = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11];
-
-window.adFreeSources = [];
-window.currentAdFreeIndex = 0;
+  // Aapka apna deployed CinePro Backend
+  const CINEPRO_BASE = 'https://cinepro-s59x.onrender.com';
   
-async function loadCineProStream(btnElement) {
+  // Luza ke variables jo delete ho gaye the, unhe wapas add kar diya
+  const LUZA_BASE = 'https://luza-api.antig9469.workers.dev';
+  const PREMIUM_SOURCES = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11];
+  
+  window.adFreeSources = [];
+  window.currentAdFreeIndex = 0;
+  
+  async function loadCineProStream(btnElement) {
   // 1. Purani request cancel karo (Page/Episode change hone par)
   if (window.premiumFetchController) {
       window.premiumFetchController.abort();
   }
   window.premiumFetchController = new AbortController();
   const signal = window.premiumFetchController.signal;
-
+  
   setActiveUI('#serverGrid .server-btn', btnElement);
   
   const qualityGrid = document.getElementById('qualityGrid');
@@ -4965,10 +4965,10 @@ async function loadCineProStream(btnElement) {
       
       const data = await response.json();
       
- // OMSS JSON se raw streams nikalna
-let streams = data.sources || data.stream || data.streams || [];
-
-if (streams.length > 0) {
+   // OMSS JSON se raw streams nikalna
+  let streams = data.sources || data.stream || data.streams || [];
+  
+  if (streams.length > 0) {
     window.adFreeSources = streams.map((s, index) => {
         
         // LOCALHOST BUG FIX: Agar URL me localhost hai, toh usko Render URL se badal do
@@ -4988,7 +4988,7 @@ if (streams.length > 0) {
         renderQualities();
         return;
     }
-}
+  }
       
       throw new Error("No playable streams found.");
       
@@ -5028,17 +5028,17 @@ if (streams.length > 0) {
                   </button>
               </div>`;
     }
-}
-}
-
-async function loadPremiumServer(srcId, btnElement) {
+  }
+  }
+  
+  async function loadPremiumServer(srcId, btnElement) {
   // 1. PURANI REQUEST KO CANCEL KARO
   if (window.premiumFetchController) {
       window.premiumFetchController.abort();
   }
   window.premiumFetchController = new AbortController();
   const signal = window.premiumFetchController.signal;
-
+  
   setActiveUI('#serverGrid .server-btn', btnElement);
   
   const qualityGrid = document.getElementById('qualityGrid');
@@ -5087,7 +5087,7 @@ async function loadPremiumServer(srcId, btnElement) {
           console.log('Luza fetch aborted.');
           return;
       }
-
+  
       console.warn(`Premium Source ${srcId} failed:`, error);
       
       const currentIndex = PREMIUM_SOURCES.indexOf(srcId);
@@ -5118,9 +5118,9 @@ async function loadPremiumServer(srcId, btnElement) {
               </div>`;
       }
   }
-}
-
-function renderPremiumServers() {
+  }
+  
+  function renderPremiumServers() {
   const serverGrid = document.getElementById('serverGrid');
   serverGrid.innerHTML = '';
   
@@ -5148,7 +5148,7 @@ function renderPremiumServers() {
       loadCineProStream(cineBtn); // CinePro load karega
   };
   serverGrid.appendChild(cineBtn);
-
+  
   // 2. LUZA BUTTONS (Baaki ke saare Premium 1, 2, 3...)
   PREMIUM_SOURCES.forEach((srcId) => {
       const btn = document.createElement('button');
@@ -5167,8 +5167,8 @@ function renderPremiumServers() {
   
   // Auto-click the CinePro button when page loads (Default priority)
   cineBtn.click();
-}
- 
+  }
+   
   // Qualities list karne wala function
   function renderQualities() {
     const qualityGrid = document.getElementById('qualityGrid');
@@ -5287,7 +5287,7 @@ function renderPremiumServers() {
         }
         
         // FIX: Changed proxyBase to match initJwPlayer exactly
-        const proxyBase = "https://movieboxproxy.veltrix620.workers.dev/";
+        const proxyBase = "https://super-tooth-1a75.yashraj52-tech2.workers.dev/";
         const encodedUrl = encodeURIComponent(currentStream.url);
         const encodedOrigin = encodeURIComponent(currentStream.origin || "");
         const encodedReferer = encodeURIComponent(currentStream.referer || "");
