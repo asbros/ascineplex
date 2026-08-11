@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <title>AS CINEPLEX | Premium Streaming</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link href='https://asbros.github.io/as.webmanifest' rel='manifest' />
+ <link href='https://i.imgur.com/ZEQdTSH.png' rel='shortcut icon' type='image/x-icon' />
+ <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://asbros.github.io/js/playerjs.js" type="text/javascript"></script>
+<!-- Vidstack Player CSS & JS -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vidstack/dist/player/styles/default/theme.css" />
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vidstack/dist/player/styles/default/layouts/video.css" />
+ <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack/dist/cdn/prod.js"></script>
+ 
+ <!-- NAYA: External CSS link kiya gaya hai -->
+ <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+ <div id="pageLoader">
+  <div class="loader-ring"></div>
+ </div>
+
+ <nav class="navbar navbar-custom py-2">
+  <div class="container d-flex" id="defaultNavContent" style="margin-left: 7px;">
+   <a class="navbar-brand fs-4 m-0" href="#" onclick="goHome()">AS <span class="text-dark">CINEPLEX</span></a>
+   <div class="d-flex align-items-center gap-3" style="margin-right: 10px;">
+    <a href="#sports" class="nav-link-custom"><i class="fa fa-trophy"></i> Live Sports</a>
+   </div>
+  </div>
+
+  <div class="container d-none py-2" id="backNavContent" style="min-height: 35px;">
+   <div class="d-flex align-items-center gap-3 w-100">
+    <button class="btn btn-link text-decoration-none p-1" style="color: var(--text-main); border: none; background: none; line-height: 1;" onclick="goBack()">
+     <i class="fa fa-arrow-left fs-4"></i>
+    </button>
+    <h5 class="mb-1 fw-bold text-truncate" id="backNavTitle" style="color: var(--text-main); max-width: 80vw;">Page Title</h5>
+   </div>
+  </div>
+ </nav>
+
+ <main class="container my-4">
+  <section id="settings-view" style="display:none;">
+   <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-8">
+     <h2 class="fw-bold mb-4">Settings</h2>
+     <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-4">
+       <h5 class="fw-bold mb-4"><i class="fa fa-server me-2 text-primary"></i> Default Servers</h5>
+       <div class="row g-3">
+        <div class="col-sm-6">
+         <label class="small fw-bold text-muted mb-2">DEFAULT MOVIE SERVER</label>
+         <select id="defaultMovieServer" class="form-select rounded-3 shadow-none border" onchange="updateDefaultServer('movie', this.value)">
+         </select>
+        </div>
+        <div class="col-sm-6">
+         <label class="small fw-bold text-muted mb-2">DEFAULT TV SERVER</label>
+         <select id="defaultTvServer" class="form-select rounded-3 shadow-none border" onchange="updateDefaultServer('tv', this.value)">
+         </select>
+        </div>
+       </div>
+       <p class="text-muted small mt-3 mb-0">Choosing a default will bypass the Trailer/Server 1 auto-load and jump straight to your preferred source.</p>
+       <p class="text-muted small mt-3 mb-0">If you are using with_ads server then only it will bypass the servers to your selected ones.</p>
+       <br>
+       <div class="mb-3 border-bottom pb-3">
+        <label class="small fw-bold text-muted mb-2">PLAYBACK MODE</label>
+        <select id="playbackModeSelect" class="form-select rounded-3 shadow-none border" onchange="handlePlaybackModeChange(this)">
+         <option value="with_ads" selected>With Ads (Default Servers)</option>
+         <option value="without_ads">Without Ads (Premium Server)</option>
+        </select>
+       </div>
+       <p class="text-muted small mt-3 mb-0">If you are using Premium server some of the movies and series may not be available in hindi dubbed.</p>
+      </div>
+     </div>
+
+     <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-4">
+       <h5 class="fw-bold mb-4"><i class="fa fa-play-circle me-2 text-success"></i> Playback & UI</h5>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">App Theme</div>
+         <div class="text-muted small">Choose your visual aesthetic.</div>
+        </div>
+        <select id="themeSelect" class="form-select form-select-sm rounded-3 shadow-none border" style="width: 140px;" onchange="changeTheme(this.value)">
+         <option value="system">System Default</option>
+         <option value="light">Light</option>
+         <option value="dark">Dark</option>
+        </select>
+       </div>
+       <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+         <div class="fw-bold">Hover Previews</div>
+         <div class="text-muted small">Autoplay trailers when hovering posters.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="previewToggle" checked onchange="updatePref('hoverPreviews', this.checked)">
+        </div>
+       </div>
+       <div class="d-flex justify-content-between align-items-center">
+        <div>
+         <div class="fw-bold">History Tracking</div>
+         <div class="text-muted small">Save your progress to 'Continue Watching'.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="historyToggle" checked onchange="updatePref('historyEnabled', this.checked)">
+        </div>
+       </div>
+       <br>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">Binge Mode (Auto-Play Next)</div>
+         <div class="text-muted small">Automatically play the next episode.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="bingeModeToggle" checked onchange="updatePref('bingeMode', this.checked)">
+        </div>
+       </div>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">Performance Mode</div>
+         <div class="text-muted small">Disable heavy animations and ambient glow for low-end devices.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="performanceToggle" onchange="updatePref('performanceMode', this.checked); applyPerformanceMode();">
+        </div>
+       </div>
+      </div>
+     </div>
+     
+     <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-4">
+       <h5 class="fw-bold mb-4"><i class="fa fa-sliders me-2 text-warning"></i> Content & Browsing</h5>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">Safe Search (Family Mode)</div>
+         <div class="text-muted small">Hide 18+ adult content from search results.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="safeSearchToggle" onchange="updatePref('safeSearch', this.checked)">
+        </div>
+       </div>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">Discover Region</div>
+         <div class="text-muted small">Show recommendations based on region.</div>
+        </div>
+        <select id="regionSelect" class="form-select form-select-sm rounded-3 shadow-none border" style="width: 140px;" onchange="updatePref('region', this.value); showToast('Region updated');">
+         <option value="IN">India</option>
+         <option value="US">Global (US)</option>
+        </select>
+       </div>
+       <div class="d-flex justify-content-between align-items-center">
+        <div>
+         <div class="fw-bold">Live TV Autoplay</div>
+         <div class="text-muted small">Auto-play channels. Turn off to save data.</div>
+        </div>
+        <div class="form-check form-switch">
+         <input class="form-check-input" type="checkbox" id="liveTvAutoplayToggle" onchange="updatePref('liveTvAutoplay', this.checked)">
+        </div>
+       </div>
+       <br>
+       <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+         <div class="fw-bold">Content Language</div>
+         <div class="text-muted small">Preferred language for titles and overview.</div>
+        </div>
+        <select id="languageSelect" class="form-select form-select-sm rounded-3 shadow-none border" style="width: 140px;" onchange="updatePref('contentLanguage', this.value); showToast('Language updated');">
+         <option value="en-US">English</option>
+         <option value="hi-IN">Hindi</option>
+        </select>
+       </div>
+      </div>
+     </div>
+     
+     <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-4">
+       <h5 class="fw-bold mb-4"><i class="fa fa-database me-2"></i> Your Data & Privacy</h5>
+       <div class="p-3 rounded-4 mb-3 border d-flex align-items-center justify-content-between" style="background: var(--bg-light);">
+        <div class="d-flex align-items-center gap-3">
+         <div>
+          <div class="fw-bold">Watch History</div>
+          <div class="text-muted small" id="historyCount">0 titles recorded</div>
+         </div>
+        </div>
+        <a href="#history" class="btn btn-primary rounded-pill px-4 fw-bold">View History</a>
+       </div>
+       <hr class="opacity-25">
+       <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-outline-danger rounded-pill px-3 fw-bold btn-sm" onclick="clearLocalData('watchlist')">Clear Wishlist</button>
+        <button class="btn btn-outline-danger rounded-pill px-3 fw-bold btn-sm" onclick="clearLocalData('watchHistory')">Clear History</button>
+        <button class="btn btn-outline-danger rounded-pill px-3 fw-bold btn-sm" onclick="clearLocalData('customM3U')">Clear Custom IPTV</button>
+       </div>
+      </div>
+     </div>
+     
+     <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-4 text-center">
+       <h5 class="fw-bold mb-3"><i class="fa fa-code me-2 text-primary"></i>Developer Info</h5>
+       <p class="text-muted small mb-3">Designed & Developed by asbros</p>
+       <a href="#about" class="btn btn-outline-primary rounded-pill px-4 fw-bold">View Developer Profile</a>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <section id="home-view"></section>
+  
+  <section id="livetv-view" style="display:none;">
+   <div id="playlistSelectionView">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+     <h5 class="section-header mb-0">IPTV PLAYLISTS</h5>
+    </div>
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: var(--surface); border: 1px solid var(--border) !important;">
+     <div class="card-body p-4">
+      <h6 class="fw-bold mb-3" style="color: var(--text-main);"><i class="fa fa-plus-circle me-2 text-primary"></i>Add Custom M3U Playlist</h6>
+      <div class="row g-2">
+       <div class="col-md-4">
+        <input type="text" id="m3uName" class="form-control shadow-none border rounded-3 bg-transparent" style="color: var(--text-main);" placeholder="Playlist Name (e.g. My Sports)">
+       </div>
+       <div class="col-md-6">
+        <input type="text" id="m3uUrl" class="form-control shadow-none border rounded-3 bg-transparent" style="color: var(--text-main);" placeholder="M3U URL (https://...)">
+       </div>
+       <div class="col-md-2">
+        <button class="btn btn-primary w-100 fw-bold rounded-3" onclick="saveCustomPlaylist()">Add</button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="position-relative mb-4">
+     <i class="fa fa-search position-absolute text-muted" style="left: 15px; top: 12px;"></i>
+     <input type="text" id="playlistSearch" class="form-control shadow-none border rounded-pill bg-transparent" style="color: var(--text-main); padding-left: 2.5rem; height: 40px;" placeholder="Search for a country or playlist..." onkeyup="filterPlaylists(this.value)">
+    </div>
+    <div id="playlistsContainer" class="list-group shadow-sm rounded-4 mb-5"></div>
+   </div>
+
+   <div id="channelsView" style="display: none;">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+     <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; padding: 0; border: 1px solid var(--border); background: var(--surface); color: var(--text-main);" onclick="showPlaylistsView()">
+       <i class="fa fa-arrow-left"></i>
+      </button>
+      <h5 class="section-header mb-0" id="currentPlaylistName">CHANNELS</h5>
+     </div>
+     <input type="text" id="channelSearch" class="form-control form-control-sm w-auto rounded-pill px-3 shadow-sm border bg-transparent" style="min-width: 250px; color: var(--text-main);" placeholder="Search channels..." onkeyup="filterChannels(this.value)">
+    </div>
+    <div id="channelCategories" class="channel-categories mb-4"></div>
+    <div id="livetvGrid" class="grid-container"></div>
+   </div>
+  </section>
+  
+  <section id="sports-view" style="display:none;">
+   <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
+    <h5 class="section-header mb-0">LIVE SPORTS</h5>
+    <select id="sportsCategorySelect" class="form-select form-select-sm w-auto rounded-pill px-3 shadow-sm border" style="min-width: 150px;" onchange="filterSports(this.value)">
+     <option value="all">All Sports</option>
+     <option value="live">🔴 Live Now</option>
+    </select>
+   </div>
+   <div id="sportsGrid" class="row g-3"></div>
+  </section>
+
+  <section id="search-view" style="display:none;">
+   <div id="navSearchContainer" class="search-container mb-4" style="position: relative;">
+    <i class="fa fa-search position-absolute text-muted" style="left: 15px; top: 12px;"></i>
+    <input type="text" id="searchInput" class="form-control search-input shadow-none w-100" placeholder="Search movies, series, actors..." autocomplete="off">
+    <div id="searchSuggestions" class="list-group position-absolute w-100 shadow-sm d-none"></div>
+   </div>
+   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <h5 class="section-header mb-0" style="flex:1;">RESULTS</h5>
+    <div class="btn-group btn-group-sm bg-white shadow-sm rounded-pill p-1">
+     <button id="filter-movie" class="btn btn-primary rounded-pill px-3 filter-btn active" onclick="filterSearch('movie',this)">Movies</button>
+     <button id="filter-tv" class="btn btn-light rounded-pill px-3 filter-btn" onclick="filterSearch('tv',this)">Series</button>
+     <button id="filter-person" class="btn btn-light rounded-pill px-3 filter-btn" onclick="filterSearch('person',this)">Actors</button>
+    </div>
+   </div>
+   <div id="searchGrid" class="grid-container"></div>
+   <div class="text-center my-5"><button id="searchLoadMore" class="btn btn-primary px-5 rounded-pill fw-bold d-none" onclick="loadMoreSearch()">Load More</button></div>
+  </section>
+
+  <section id="list-view" style="display:none;">
+   <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="section-header mb-0" id="listTitle"></h5>
+    <button id="listActionBtn" class="btn btn-outline-danger btn-sm fw-bold"></button>
+   </div>
+   <div id="listGrid" class="grid-container"></div>
+  </section>
+
+  <section id="details-view" style="display:none;">
+   <div class="row justify-content-center">
+    <div class="col-lg-11">
+     <div class="position-relative" style="z-index: 1;">
+      <div id="ambient-glow"></div>
+      <div id="playerContainer" class="video-container shadow"></div>
+     </div>
+     <div id="upNextContainer"></div>
+     <div style="margin-top:23px" class="stream-controls shadow-sm">
+      <div class="mb-4">
+       <div class="server-grid d-flex flex-wrap gap-2" id="serverGrid"></div>
+      </div>
+     </div>
+     <div id="tvSelectors" class="d-none mt-4"></div>
+     <div class="row mt-2 g-4">
+      <div class="col-12" id="metaContent"></div>
+     </div>
+          <div class="col-12" id="sideContent"></div>
+    </div>
+   </div>
+  </section>
+
+  <section id="person-view" style="display:none;"></section>
+  <section id="about-view" style="display:none;"></section>
+
+  <div class="modal fade" id="livetvModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 bg-dark text-white shadow-lg">
+     <div class="modal-header border-bottom border-secondary py-3 px-4">
+      <h6 class="modal-title fw-bold text-truncate" id="livetvTitle" style="font-family: 'Plus Jakarta Sans', sans-serif;">Live Channel</h6>
+      <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" style="font-size: 0.8rem;"></button>
+     </div>
+     <div class="modal-body p-3 p-md-4">
+      <div id="liveTvPlayerContainer" class="position-relative w-100 bg-black rounded-3 overflow-hidden shadow-sm" style="aspect-ratio: 16/9;">
+       <div id="liveTvPlaceholder" class="d-flex flex-column justify-content-center align-items-center position-absolute w-100 h-100 px-3 text-center" style="z-index: 3; background: #0b0f19;">
+        <div class="spinner-border text-primary mb-3"></div>
+        <span class="fw-semibold small text-secondary">Connecting to Stream...</span>
+       </div>
+      </div>
+      <div id="liveTvError" class="text-danger mt-3 text-center small fw-bold d-none">
+       <i class="fa fa-triangle-exclamation me-1"></i> Failed to load stream. The channel might be offline or blocked by CORS.
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="modal fade" id="sportsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 bg-dark text-white shadow-lg">
+     <div class="modal-header border-bottom border-secondary py-3 px-4">
+      <h6 class="modal-title fw-bold text-truncate" id="sportsModalTitle" style="font-family: 'Plus Jakarta Sans', sans-serif;">Live Match</h6>
+      <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" style="font-size: 0.8rem;"></button>
+     </div>
+     <div class="modal-body p-3 p-md-4">
+      <div id="sportsIframeContainer" class="position-relative w-100 bg-black rounded-3 overflow-hidden shadow-sm" style="aspect-ratio: 16/9;">
+       <div id="streamPlaceholder" class="d-flex flex-column justify-content-center align-items-center position-absolute w-100 h-100 px-3 text-center" style="z-index: 3; background: #0b0f19;">
+        <i class="fa fa-play-circle text-primary mb-2" style="font-size: 2.5rem; opacity: 0.8;"></i>
+        <span class="fw-semibold small text-secondary">Select a server below to start streaming</span>
+       </div>
+      </div>
+      <div class="mt-3 px-1">
+       <span class="text-muted small fw-bold d-block mb-2 text-uppercase tracking-wider" style="font-size: 0.65rem;">Available Servers</span>
+       <div id="sportsSources" class="d-flex flex-wrap gap-2"></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 shadow-lg">
+     <div class="modal-header border-0 pb-0">
+      <h5 class="modal-title fw-bold text-uppercase"><i class="fa fa-download me-2 text-primary"></i>Download Options</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+     </div>
+     <div class="modal-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+       <span class="text-muted small fw-bold">SELECT A SERVER</span>
+       <span id="dlTargetLabel" class="badge bg-primary rounded-pill px-3 py-2"></span>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+       <button class="btn btn-outline-dark rounded-pill px-4 fw-bold dl-server-btn" onclick="initDownload(1)">Server: BunnyDDL</button>
+       <button class="btn btn-outline-dark rounded-pill px-4 fw-bold dl-server-btn" onclick="initDownload(2)">Server: VidVault</button>
+      </div>
+      <div id="dlIframeContainer" class="d-none mt-3">
+       <iframe id="dlIframe" src="" style="width:100%; height:500px; border-radius:12px; border:1px solid var(--border);"></iframe>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </main>
+
+ <nav class="bottom-nav shadow-lg">
+  <a href="#" class="bottom-nav-item active" id="nav-home">
+   <i class="fa fa-home"></i>
+   <span>Home</span>
+  </a>
+  <a href="#search" class="bottom-nav-item" id="nav-search">
+   <i class="fa fa-search"></i>
+   <span>Search</span>
+  </a>
+  <a href="#livetv" class="bottom-nav-item" id="nav-livetv">
+   <i class="fa fa-tv"></i>
+   <span>Live TV</span>
+  </a>
+  <a href="#wishlist" class="bottom-nav-item" id="nav-wishlist">
+   <i class="fa fa-bookmark"></i>
+   <span>Wishlist</span>
+  </a>
+  <a href="#settings" class="bottom-nav-item" id="nav-settings">
+   <i class="fa fa-cog"></i>
+   <span>Settings</span>
+  </a>
+ </nav>
+
+ <div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <span class="lightbox-close" title="Close">&times;</span>
+  <span class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); changeLightboxImage(-1)">&#10094;</span>
+  <img id="lightboxImage" src="" alt="Gallery Image" onclick="event.stopPropagation()">
+  <span class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); changeLightboxImage(1)">&#10095;</span>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+ <!-- NAYA: External JavaScript link kiya gaya hai -->
+ <script src="main.js"></script>
+</body>
+</html>
