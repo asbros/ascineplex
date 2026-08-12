@@ -245,7 +245,7 @@
   
   .server-btn,
   .trailer-btn {
-    padding: 9px 24px;
+    padding: 8px 20px;
     border-radius: 10px;
     border: 1px solid var(--border);
     font-size: 0.8rem;
