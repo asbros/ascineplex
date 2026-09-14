@@ -984,7 +984,7 @@ window.toggleBio = function (full, short) {
 // ---------- STREAM SERVERS ----------
 const SERVERS = [
   { n: "Server 1", m: "https://primeflix.ru/player/movie/", t: "https://primeflix.ru/player/tv/" },
-  { n: "Server 2", m: "https://gemma416okl.com/play/", t: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=tv&id=", useImdb: true },
+  { n: "Server 2", m: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=movie&id=", t: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=tv&id=", useImdb: true },
   { n: "Server 3", m: "https://streams.iqsmartgames.com/embed/movie/", t: "https://streams.iqsmartgames.com/embed/tv/", key: "?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4" },
   { n: "Server 4", m: "https://flicky.host/embed/movie/?id=", t: "https://flicky.host/embed/tv/?id=" },
   { n: "Server 5", m: "https://zxcstream.xyz/player/movie/", t: "https://zxcstream.xyz/player/tv/" },
