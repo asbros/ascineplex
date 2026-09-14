@@ -984,9 +984,9 @@ window.toggleBio = function (full, short) {
 // ---------- STREAM SERVERS ----------
 const SERVERS = [
   { n: "Server 1", m: "https://primeflix.ru/player/movie/", t: "https://primeflix.ru/player/tv/" },
-  { n: "Server 2", m: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=movie&id=", t: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=tv&id=", useImdb: true },
+  { n: "Server 2", m: "https://slast430did.com/play/", t: "https://watch-v2.autoembed.app/api/hdmovies/embed?type=tv&id=", useImdb: true },
   { n: "Server 3", m: "https://streams.iqsmartgames.com/embed/movie/", t: "https://streams.iqsmartgames.com/embed/tv/", key: "?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4" },
-  { n: "Server 4", m: "https://flicky.host/embed/movie/?id=", t: "https://flicky.host/embed/tv/?id=" },
+  { n: "Server 4", m: "https://netplayz.icu/watch?type=movie&id=", t: "https://netplayz.icu/watch?type=tv&id=" },
   { n: "Server 5", m: "https://zxcstream.xyz/player/movie/", t: "https://zxcstream.xyz/player/tv/" },
   { n: "Server 6", m: "https://www.viduki.net/1/movie/", t: "https://www.viduki.net/1/tv/" },
   { n: "Server 7", m: "https://111movies.net/movie/", t: "https://111movies.net/tv/" },
